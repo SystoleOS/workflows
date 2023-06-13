@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: stage3-build-
+  name: stage3-build
 spec:
   entrypoint: build-push
   volumes:
