@@ -1,5 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
+namespace: workflows
 metadata:
   name: stage3-build
 spec:
@@ -8,6 +9,9 @@ spec:
   - name: docker-config
     secret:
       secretName: systoleos-herbie-pull-secret
+      items:
+        - key: .dockerconfigjson
+          path: config.json
   templates:
   - name: build-push
     steps:
@@ -21,11 +25,13 @@ spec:
       - name: tag
         value: latest
     container:
-      image: gcr.io/kaniko-project/executor:latest
+      image: gcr.io/kaniko-project/executor:debug
+      command: ["/bin/sh", "-c"]
       args:
-      - --context=dir://workspace
-      - --dockerfile=Dockerfile
-      - --destination={{inputs.parameters.registry}}:{{inputs.parameters.tag}}
+        - >
+          /kaniko/executor --context=dir://workspace
+          --dockerfile=https://raw.githubusercontent.com/SystoleOS/workflows/main/base/stage3/Dockerfile
+          --destination={{inputs.parameters.registry}}:{{inputs.parameters.tag}}
       volumeMounts:
       - name: docker-config
         mountPath: /kaniko/.docker/
