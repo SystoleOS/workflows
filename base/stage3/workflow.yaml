@@ -30,7 +30,7 @@ spec:
       args:
         - >
           /kaniko/executor --context=dir://workspace
-          --dockerfile=https://raw.githubusercontent.com/SystoleOS/docker/main/SystoleOS/stage3/Dockerfile
+          --dockerfile=https://raw.githubusercontent.com/SystoleOS/docker/development/SystoleOS/stage3/Dockerfile
           --destination={{inputs.parameters.registry}}:{{inputs.parameters.tag}}
       volumeMounts:
       - name: docker-config
